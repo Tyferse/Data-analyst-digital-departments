@@ -1,0 +1,64 @@
+SELECT orderNumber, productCode, quantityOrdered * priceEach AS sold
+FROM orderdetails
+ORDER BY sold DESC
+LIMIT 10
+
+____________________
+
+
+SELECT orderNumber, SUM(quantityOrdered * priceEach) AS total
+FROM orderdetails
+GROUP BY orderNumber
+HAVING total > 59000
+ORDER BY total DESC
+
+____________________
+
+
+SELECT orders.orderNumber, orderDate, status, SUM(quantityOrdered * priceEach) AS total
+FROM orderdetails
+INNER JOIN orders ON orders.orderNumber = orderdetails.orderNumber
+GROUP BY orderNumber
+HAVING total > 59000
+ORDER BY total DESC
+
+____________________
+
+
+SELECT contactFirstName, contactLastName, country, orders.orderNumber, orderDate, status, SUM(quantityOrdered * priceEach) AS total
+FROM orderdetails
+INNER JOIN orders ON orders.orderNumber = orderdetails.orderNumber
+INNER JOIN customers ON orders.customerNumber = customers.customerNumber
+GROUP BY orderNumber
+HAVING total > 59000
+ORDER BY total DESC
+
+____________________
+
+
+SELECT productName, SUM(quantityOrdered * priceEach) as total
+FROM orderdetails
+LEFT JOIN products ON products.productCode = orderdetails.productCode
+GROUP BY productName
+ORDER BY total DESC
+LIMIT 10
+
+____________________
+
+
+SELECT firstName, lastName, contactFirstName, contactLastName
+FROM customers
+LEFT JOIN employees ON employees.employeeNumber = customers.salesRepEmployeeNumber
+UNION
+SELECT firstName, lastName, contactFirstName, contactLastName
+FROM customers
+RIGHT JOIN employees ON employees.employeeNumber = customers.salesRepEmployeeNumber
+
+____________________
+
+
+SELECT empl1.firstName as firstName, empl1.lastName as lastName, empl1.jobTitle as jobTitle, empl2.firstName as subFirstName, empl2.lastName as subLastName
+FROM employees as empl1
+LEFT JOIN employees as empl2 ON empl1.employeeNumber = empl2.reportsTo
+
+
